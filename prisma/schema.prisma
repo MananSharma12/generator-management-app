@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/.db"
+}
+
+model Customer {
+  id         Int         @id @default(autoincrement())
+  name       String
+  Generators Generator[]
+}
+
+model Generator {
+  id           Int      @id @default(autoincrement())
+  serialNumber String
+  installDate  DateTime
+  warrantyDate DateTime
+  customerId   Int
+  Customer     Customer @relation(fields: [customerId], references: [id])
+}
