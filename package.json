@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@prisma/client": "^5.15.0",
+    "@solidjs/router": "^0.13.5",
     "@tauri-apps/api": "^1",
     "solid-js": "^1.7.8"
   },

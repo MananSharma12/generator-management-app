@@ -1,6 +1,16 @@
 /* @refresh reload */
 import "./index.css";
 import { render } from "solid-js/web";
-import App from "./App";
+import { Router, Route } from "@solidjs/router";
 
-render(() => <App />, document.getElementById("root") as HTMLElement);
+import App from "./App";
+import { NotFound } from "./components/NotFound.tsx";
+
+render(
+  () => (
+    <Router root={App}>
+      <Route path="*" component={NotFound} />
+    </Router>
+  ),
+  document.getElementById("root") as HTMLElement,
+);
