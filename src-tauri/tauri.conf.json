@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "generator-management",
+    "productName": "shree-hps-generator-management",
     "version": "0.0.0"
   },
   "tauri": {
@@ -19,7 +19,7 @@
     },
     "windows": [
       {
-        "title": "generator-management",
+        "title": "Shree HPS Generator Management",
         "width": 800,
         "height": 600
       }

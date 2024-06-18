@@ -1,8 +1,8 @@
 [package]
-name = "generator-management"
+name = "shree-hps-generator-management"
 version = "0.0.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["Manan Sharma"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
