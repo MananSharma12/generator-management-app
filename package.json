@@ -15,6 +15,7 @@
     "@kobalte/core": "^0.13.3",
     "@prisma/client": "^5.15.0",
     "@solidjs/router": "^0.13.5",
+    "@supabase/supabase-js": "^2.43.5",
     "@tauri-apps/api": "^1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

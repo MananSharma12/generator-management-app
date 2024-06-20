@@ -924,7 +924,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "generator-management"
+name = "shree-hps-generator-management"
 version = "0.0.0"
 dependencies = [
  "serde",
