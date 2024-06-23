@@ -16,6 +16,7 @@ render(
       <Route path="/" component={Dashboard} />
       <Route path="/customers" component={Customers} />
       <Route path="/generators" component={Generators} />
+      <Route path="/generators/:customerId" component={Generators} />
       <Route path="/warranty" component={Warranty} />
       <Route path="*" component={NotFound} />
     </Router>

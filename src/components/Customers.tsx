@@ -1,4 +1,5 @@
-import { createResource, For } from "solid-js";
+import { createResource, onMount, For } from "solid-js";
+import { A } from "@solidjs/router";
 import { supabase } from "~/supabaseClient";
 import {
   Table,
@@ -10,6 +11,10 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
+interface CustomersProps {
+  setRefetchCustomers: (refetch: () => void) => void;
+}
+
 const fetchCustomers = async () => {
   const { data, error } = await supabase.from("Customer").select("id, name");
 
@@ -20,8 +25,12 @@ const fetchCustomers = async () => {
   return data;
 };
 
-export const Customers = () => {
-  const [customers] = createResource(fetchCustomers);
+export const Customers = (props: CustomersProps) => {
+  const [customers, { refetch }] = createResource(fetchCustomers);
+
+  onMount(() => {
+    props.setRefetchCustomers(() => refetch);
+  });
 
   return (
     <Table>
@@ -32,12 +41,14 @@ export const Customers = () => {
           <TableHead>Customer Name</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody class="w-full">
         <For each={customers()}>
           {(customer) => (
             <TableRow>
               <TableCell class="font-medium">{customer.id}</TableCell>
-              <TableCell>{customer.name}</TableCell>
+              <A href={"/generators/" + customer.id} class="block w-full">
+                <TableCell>{customer.name}</TableCell>
+              </A>
             </TableRow>
           )}
         </For>

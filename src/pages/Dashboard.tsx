@@ -1,12 +1,29 @@
+import { createSignal } from "solid-js";
 import { addCustomer } from "~/api";
 import { AddCustomerDialog } from "~/components/AddCustomerDialog";
 import { Customers } from "~/components/Customers.tsx";
+import { showToast } from "~/components/ui/toast.tsx";
 
 export const Dashboard = () => {
+  const [refetchCustomers, setRefetchCustomers] = createSignal<() => void>(
+    () => {},
+  );
+
   const handleAddCustomer = async (customerName: string) => {
     try {
       await addCustomer(customerName);
+      showToast({
+        title: "SUCCESS!",
+        description: "Customer Successfully Added!",
+        variant: "success",
+      });
+      refetchCustomers()();
     } catch (error) {
+      showToast({
+        title: "ERROR!",
+        description: "Error Adding Customer",
+        variant: "error",
+      });
       console.error("Error adding customer:", error);
     }
   };
@@ -18,7 +35,7 @@ export const Dashboard = () => {
         <AddCustomerDialog onAddCustomer={handleAddCustomer} />
       </div>
       <div>
-        <Customers />
+        <Customers setRefetchCustomers={setRefetchCustomers} />
       </div>
     </div>
   );

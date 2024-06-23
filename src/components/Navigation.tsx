@@ -2,7 +2,6 @@ import { A, useLocation } from "@solidjs/router";
 
 import { HomeIcon } from "~/assets/icons/HomeIcon.tsx";
 import { UsersIcon } from "~/assets/icons/UsersIcon.tsx";
-import { PackageIcon } from "~/assets/icons/PackageIcon.tsx";
 import { CalenderIcon } from "~/assets/icons/CalenderIcon.tsx";
 import { Package2Icon } from "~/assets/icons/Package2Icon.tsx";
 import { BellIcon } from "~/assets/icons/BellIcon.tsx";
@@ -41,10 +40,6 @@ export const Navigation = () => {
               <A href="/customers" class={getLinkClass("/customers")}>
                 <UsersIcon class="h-4 w-4" />
                 Customers
-              </A>
-              <A href="/generators" class={getLinkClass("/generators")}>
-                <PackageIcon class="h-4 w-4" />
-                Generators
               </A>
               <A href="/warranty" class={getLinkClass("/warranty")}>
                 <CalenderIcon class="h-4 w-4" />
