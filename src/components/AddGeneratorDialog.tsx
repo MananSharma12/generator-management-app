@@ -26,6 +26,29 @@ export const AddGeneratorDialog = ({
   };
 
   const handleAddGenerator = async () => {
+    const { data: existingGenerators, error: fetchError } = await supabase
+      .from("Generator")
+      .select("id")
+      .eq("serialNumber", serialNumber());
+
+    if (fetchError) {
+      showToast({
+        title: "ERROR!",
+        description: "Error fetching generator. Please try again.",
+        variant: "error",
+      });
+      return;
+    }
+
+    if (existingGenerators.length > 0) {
+      showToast({
+        title: "ERROR!",
+        description: "Serial number already associated with another generator.",
+        variant: "error",
+      });
+      return;
+    }
+
     const generator = {
       serialNumber: serialNumber(),
       installDate: new Date(installDate()).toISOString(),
