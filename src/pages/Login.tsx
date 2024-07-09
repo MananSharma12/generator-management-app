@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { supabase } from "~/supabaseClient";
+import { Button } from "~/components/ui/button";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -39,9 +40,7 @@ export const Login = () => {
         class="border p-2 mb-2 w-64"
       />
       {error() && <p class="text-red-500">{error()}</p>}
-      <button onClick={handleLogin} class="bg-blue-500 text-white p-2 rounded">
-        Login
-      </button>
+      <Button onClick={handleLogin}>Login</Button>
     </div>
   );
 };
