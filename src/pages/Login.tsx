@@ -2,6 +2,7 @@ import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { supabase } from "~/supabaseClient";
 import { Button } from "~/components/ui/button";
+import { showToast } from "~/components/ui/toast.tsx";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -17,8 +18,18 @@ export const Login = () => {
 
     if (error) {
       setError(error.message);
+      showToast({
+        title: "ERROR!",
+        description: "Cannot Login",
+        variant: "error",
+      });
     } else {
       navigate("/");
+      showToast({
+        title: "SUCCESS!",
+        description: "Successfully Logged In!",
+        variant: "success",
+      });
     }
   };
 

@@ -10,10 +10,25 @@ import {
 
 import { Package2Icon } from "~/assets/icons/Package2Icon.tsx";
 import { Component, JSX } from "solid-js";
+import { supabase } from "~/supabaseClient.ts";
+import { useNavigate } from "@solidjs/router";
+import { showToast } from "~/components/ui/toast.tsx";
 
 export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
   props,
 ) => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+    showToast({
+      title: "Logged Out",
+      description: "Successfully Logged Out!",
+      variant: "default",
+    });
+  };
+
   return (
     <div class="flex flex-1 flex-col">
       <header class="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
@@ -34,23 +49,13 @@ export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
               size="icon"
               class="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
             >
-              <img
-                // src="/placeholder.svg"
-                width="32"
-                height="32"
-                class="rounded-full"
-                alt="Avatar"
-              />
               <span class="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>

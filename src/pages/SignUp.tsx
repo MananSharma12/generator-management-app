@@ -45,7 +45,7 @@ export const SignUp = () => {
         navigate("/");
         showToast({
           title: "SUCCESS!",
-          description: "Signed Up Successfully!",
+          description: "Check your email for Signup confirmation!",
           variant: "success",
         });
       } else {

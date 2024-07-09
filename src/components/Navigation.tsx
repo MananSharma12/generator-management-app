@@ -61,17 +61,6 @@ export const Navigation = () => {
                     <CalenderIcon class="h-4 w-4" />
                     Warranty Due
                   </A>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    class="ml-auto h-8 w-8"
-                    onClick={async () => {
-                      await supabase.auth.signOut();
-                      setSession(null);
-                    }}
-                  >
-                    Logout
-                  </Button>
                 </>
               ) : (
                 <>

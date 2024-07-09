@@ -1,25 +1,70 @@
-import { createSignal, createEffect, Component, JSX } from "solid-js";
+import { createSignal, onMount, Show, Component, JSX } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { supabase } from "~/supabaseClient";
-import type { Session } from "@supabase/supabase-js";
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValueLabel,
+} from "~/components/ui/progress";
+import { showToast } from "~/components/ui/toast.tsx";
 
 export const ProtectedRoute: Component<{
   children: JSX.Element | JSX.Element[];
 }> = (props) => {
   const navigate = useNavigate();
-  const [session, setSession] = createSignal<Session | null>(null);
+  const [session, setSession] = createSignal<string | null>(null);
+  const [loading, setLoading] = createSignal(true);
+  const [progress, setProgress] = createSignal(0);
 
-  createEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
+  onMount(async () => {
+    setProgress(20);
+    const { data, error } = await supabase.auth.getSession();
+    setProgress(50);
+
+    try {
+      if (error || !data || !data.session) {
+        showToast({
+          title: "ERROR!",
+          description: `Something went wrong ${error}`,
+          variant: "error",
+        });
         navigate("/login");
       } else {
-        setSession(data.session);
+        setSession(data.session.access_token);
       }
-    };
-    checkSession();
+    } catch (error) {
+      showToast({
+        title: "ERROR!",
+        description: `Something went wrong ${error}`,
+        variant: "error",
+      });
+      navigate("/login");
+    } finally {
+      setLoading(false);
+      setProgress(100);
+    }
   });
 
-  return session() ? props.children : null;
+  return (
+    <Show
+      when={!loading()}
+      fallback={
+        <div class="flex flex-col items-center justify-center min-h-screen">
+          <Progress
+            value={progress()}
+            minValue={0}
+            maxValue={100}
+            class="w-[300px] space-y-1"
+          >
+            <div class="flex justify-between">
+              <ProgressLabel>Loading...</ProgressLabel>
+              <ProgressValueLabel />
+            </div>
+          </Progress>
+        </div>
+      }
+    >
+      {session() ? props.children : <div> Redirecting...</div>}
+    </Show>
+  );
 };
