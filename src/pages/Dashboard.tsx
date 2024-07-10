@@ -24,7 +24,6 @@ export const Dashboard = () => {
         description: "Error Adding Customer",
         variant: "error",
       });
-      console.error("Error adding customer:", error);
     }
   };
 

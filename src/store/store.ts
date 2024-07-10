@@ -13,4 +13,12 @@ const [sessionStore, setSessionStore] = createStore<SessionStore>({
   progress: 0,
 });
 
+export function resetSessionStore() {
+  setSessionStore({
+    session: null,
+    loading: true,
+    progress: 0,
+  });
+}
+
 export { sessionStore, setSessionStore };

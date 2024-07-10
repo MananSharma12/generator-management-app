@@ -13,6 +13,7 @@ import { Component, JSX } from "solid-js";
 import { supabase } from "~/supabaseClient.ts";
 import { useNavigate } from "@solidjs/router";
 import { showToast } from "~/components/ui/toast.tsx";
+import { resetSessionStore } from "~/store/store.ts";
 
 export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
   props,
@@ -21,6 +22,7 @@ export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    resetSessionStore();
     navigate("/login");
     showToast({
       title: "Logged Out",

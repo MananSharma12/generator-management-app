@@ -27,7 +27,6 @@ export const ProtectedRoute: Component<{
       });
       navigate("/login");
     } else {
-      console.log(data);
       setSessionStore("session", data.session);
     }
 

@@ -1,7 +1,7 @@
 import { createResource, For } from "solid-js";
 import { useParams } from "@solidjs/router";
 
-import { supabase } from "~/supabaseClient";
+import { fetchGenerators } from "~/api";
 import {
   Table,
   TableBody,
@@ -14,30 +14,19 @@ import {
 
 import { AddGeneratorDialog } from "~/components/AddGeneratorDialog";
 
-const fetchGenerators = async (customerId?: number) => {
-  let query = supabase.from("Generator").select("*");
-
-  if (customerId) {
-    query = query.eq("customerId", customerId);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error("Error fetching generators:", error);
-    return [];
-  }
-  return data;
-};
-
 export const Generators = () => {
   const params = useParams();
-  const customerId = params.customerId
-    ? parseInt(params.customerId)
-    : undefined;
+  const customerId = parseInt(params.customerId);
   const [generators, { refetch }] = createResource(() =>
     fetchGenerators(customerId),
   );
+
+  const isPastDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to beginning of the day for accurate comparison
+    return date < today;
+  };
 
   return (
     <div class="flex flex-col space-y-4">
@@ -62,12 +51,18 @@ export const Generators = () => {
             {(generator) => (
               <TableRow>
                 <TableCell class="font-medium">{generator.id}</TableCell>
-                <TableCell>{generator.serialNumber}</TableCell>
+                <TableCell>{generator.serial_number}</TableCell>
                 <TableCell>
-                  {new Date(generator.installDate).toLocaleDateString()}
+                  {new Date(generator.install_date).toLocaleDateString()}
                 </TableCell>
-                <TableCell>
-                  {new Date(generator.warrantyDueDate).toLocaleDateString()}
+                <TableCell
+                  class={
+                    isPastDate(generator.warranty_due_date)
+                      ? "text-red-500"
+                      : ""
+                  }
+                >
+                  {new Date(generator.warranty_due_date).toLocaleDateString()}
                 </TableCell>
               </TableRow>
             )}

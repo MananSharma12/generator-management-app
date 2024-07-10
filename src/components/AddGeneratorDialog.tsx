@@ -1,10 +1,10 @@
 import { createSignal } from "solid-js";
-import { supabase } from "~/supabaseClient";
+import { addGenerator } from "~/api.ts";
 import { Button } from "~/components/ui/button";
 import { showToast } from "~/components/ui/toast.tsx";
 
 interface AddGeneratorDialogProps {
-  customerId?: number;
+  customerId: number;
   onAddGenerator: () => void;
 }
 
@@ -26,52 +26,29 @@ export const AddGeneratorDialog = ({
   };
 
   const handleAddGenerator = async () => {
-    const { data: existingGenerators, error: fetchError } = await supabase
-      .from("Generator")
-      .select("id")
-      .eq("serialNumber", serialNumber());
-
-    if (fetchError) {
-      showToast({
-        title: "ERROR!",
-        description: "Error fetching generator. Please try again.",
-        variant: "error",
-      });
-      return;
-    }
-
-    if (existingGenerators.length > 0) {
-      showToast({
-        title: "ERROR!",
-        description: "Serial number already associated with another generator.",
-        variant: "error",
-      });
-      return;
-    }
-
     const generator = {
       serialNumber: serialNumber(),
-      installDate: new Date(installDate()).toISOString(),
-      warrantyDueDate: new Date(warrantyDate()).toISOString(),
+      installDate: new Date(installDate()),
+      warrantyDueDate: new Date(warrantyDate()),
       customerId,
     };
 
-    const { error } = await supabase.from("Generator").insert([generator]);
-
-    if (error) {
-      console.error("Error adding generator:", error);
-      showToast({
-        title: "ERROR!",
-        description: "Error Adding Generator",
-        variant: "error",
-      });
-    } else {
+    try {
+      await addGenerator(generator);
       onAddGenerator();
       closeDialog();
       showToast({
         title: "SUCCESS!",
         description: "Generator Successfully Added!",
         variant: "success",
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occured.";
+      showToast({
+        title: "ERROR!",
+        description: errorMessage,
+        variant: "error",
       });
     }
   };

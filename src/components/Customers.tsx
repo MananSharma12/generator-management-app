@@ -1,6 +1,5 @@
 import { createResource, onMount, For } from "solid-js";
 import { A } from "@solidjs/router";
-import { supabase } from "~/supabaseClient";
 import {
   Table,
   TableBody,
@@ -10,23 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { getCustomers } from "~/api.ts";
 
 interface CustomersProps {
   setRefetchCustomers: (refetch: () => void) => void;
 }
 
-const fetchCustomers = async () => {
-  const { data, error } = await supabase.from("Customer").select("id, name");
-
-  if (error) {
-    console.error("Error fetching customers:", error);
-    return [];
-  }
-  return data;
-};
-
 export const Customers = (props: CustomersProps) => {
-  const [customers, { refetch }] = createResource(fetchCustomers);
+  const [customers, { refetch }] = createResource(getCustomers);
 
   onMount(() => {
     props.setRefetchCustomers(() => refetch);
@@ -37,7 +27,7 @@ export const Customers = (props: CustomersProps) => {
       <TableCaption>A list of your customers.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead class="w-[100px]">Customer ID</TableHead>
+          <TableHead class="w-[120px]">Customer ID</TableHead>
           <TableHead>Customer Name</TableHead>
         </TableRow>
       </TableHeader>
