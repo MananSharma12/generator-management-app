@@ -6,9 +6,6 @@ import { Session } from "@supabase/supabase-js";
 import { HomeIcon } from "~/assets/icons/HomeIcon.tsx";
 import { CalenderIcon } from "~/assets/icons/CalenderIcon.tsx";
 import { Package2Icon } from "~/assets/icons/Package2Icon.tsx";
-import { BellIcon } from "~/assets/icons/BellIcon.tsx";
-
-import { Button } from "~/components/ui/button.tsx";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -32,17 +29,13 @@ export const Navigation = () => {
 
   return (
     <div class="h-screen">
-      <div class="hidden h-full w-[280px] border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
+      <div class="hidden h-full w-[320px] border-r bg-gray-100/40 dark:bg-gray-800/40 md:block">
         <div class="flex flex-col gap-2">
-          <div class="flex h-[60px] items-center border-b px-6">
+          <div class="flex h-[60px] items-center border-b px-4">
             <div class="flex items-center gap-2 font-semibold">
               <Package2Icon class="h-6 w-6" />
-              <span class="">Shree HPS Generator Management</span>
+              <div>Shree HPS Generator Management</div>
             </div>
-            <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
-              <BellIcon class="h-4 w-4" />
-              <span class="sr-only">Toggle notifications</span>
-            </Button>
           </div>
           <div class="flex-1 overflow-auto py-2">
             <nav class="grid items-start px-4 text-sm font-medium">
@@ -54,7 +47,7 @@ export const Navigation = () => {
                   </A>
                   <A href="/warranty" class={getLinkClass("/warranty")}>
                     <CalenderIcon class="h-4 w-4" />
-                    Warranty Due
+                    Service Due
                   </A>
                 </>
               ) : (

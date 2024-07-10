@@ -1,4 +1,4 @@
-import { createResource, For } from "solid-js";
+import { createResource, For, Show } from "solid-js";
 import { useParams } from "@solidjs/router";
 
 import { fetchGenerators } from "~/api";
@@ -31,19 +31,19 @@ export const Generators = () => {
   return (
     <div class="flex flex-col space-y-4">
       <h1 class="text-2xl font-semibold">
-        {customerId
-          ? `Generators for Customer ${customerId}`
-          : "All Generators"}
+        Generators for Customer {customerId}
       </h1>
       <AddGeneratorDialog customerId={customerId} onAddGenerator={refetch} />
       <Table>
-        <TableCaption>A list of generators.</TableCaption>
+        <Show when={generators()?.length === 0}>
+          <TableCaption>No generators found for this customer.</TableCaption>
+        </Show>
         <TableHeader>
           <TableRow>
             <TableHead class="w-[100px]">Generator ID</TableHead>
             <TableHead>Serial Number</TableHead>
             <TableHead>Install Date</TableHead>
-            <TableHead>Warranty Date</TableHead>
+            <TableHead>Service Due Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -69,9 +69,6 @@ export const Generators = () => {
           </For>
         </TableBody>
       </Table>
-      {generators()?.length === 0 && (
-        <p>No generators found for this customer.</p>
-      )}
     </div>
   );
 };
