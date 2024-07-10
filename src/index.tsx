@@ -1,7 +1,8 @@
 /* @refresh reload */
 import "./index.css";
 import { render } from "solid-js/web";
-import { Router, Route } from "@solidjs/router";
+import { Router, Route, RouteDefinition } from "@solidjs/router";
+import { Component } from "solid-js";
 
 import App from "./App";
 import { Dashboard } from "~/pages/Dashboard.tsx";
@@ -13,50 +14,21 @@ import { SignUp } from "~/pages/SignUp.tsx";
 import { NotFound } from "~/pages/NotFound.tsx";
 import { ProtectedRoute } from "~/components/ProtectedRoute.tsx";
 
+const ProtectedLayout: Component<{ children: RouteDefinition[] }> = (props) => (
+  <ProtectedRoute>{props.children}</ProtectedRoute>
+);
+
 render(
   () => (
     <Router>
       <Route path="/" component={App}>
-        <Route
-          path="/"
-          component={() => (
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          )}
-        />
-        <Route
-          path="/customers"
-          component={() => (
-            <ProtectedRoute>
-              <Customers />
-            </ProtectedRoute>
-          )}
-        />
-        <Route
-          path="/generators"
-          component={() => (
-            <ProtectedRoute>
-              <Generators />
-            </ProtectedRoute>
-          )}
-        />
-        <Route
-          path="/generators/:customerId"
-          component={() => (
-            <ProtectedRoute>
-              <Generators />
-            </ProtectedRoute>
-          )}
-        />
-        <Route
-          path="/warranty"
-          component={() => (
-            <ProtectedRoute>
-              <Warranty />
-            </ProtectedRoute>
-          )}
-        />
+        <Route component={ProtectedLayout}>
+          <Route path="/" component={Dashboard} />
+          <Route path="/customers" component={Customers} />
+          <Route path="/generators" component={Generators} />
+          <Route path="/generators/:customerId" component={Generators} />
+          <Route path="/warranty" component={Warranty} />
+        </Route>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
         <Route path="*" component={NotFound} />
