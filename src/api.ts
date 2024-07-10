@@ -74,3 +74,38 @@ export async function fetchGenerators(customerId?: number) {
 
   return data;
 }
+
+export async function fetchPastDueGenerators() {
+  const user = sessionStore.session?.user;
+  if (!user) throw new Error("User not logged in");
+
+  const { data: customers, error: customerError } = await supabase
+    .from("customers")
+    .select("id, name")
+    .eq("user_id", user.id);
+
+  if (customerError) throw new Error("Error fetching customers");
+
+  const pastDueGenerators = [];
+  const today = new Date().toISOString().split("T")[0];
+
+  for (const customer of customers) {
+    console.log("For", customer);
+    const { data: generators, error: generatorError } = await supabase
+      .from("generators")
+      .select(`*, customers(name)`)
+      .lt("warranty_due_date", today)
+      .eq("customer_id", customer.id);
+
+    if (generatorError) throw new Error("Error fetching generators");
+
+    console.log("We have generator", generators);
+    console.log("List so far", pastDueGenerators);
+
+    pastDueGenerators.push(
+      ...generators.map((g) => ({ ...g, customerName: customer.name })),
+    );
+  }
+
+  return pastDueGenerators;
+}
