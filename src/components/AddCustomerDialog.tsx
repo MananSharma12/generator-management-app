@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { Button } from "~/components/ui/button.tsx";
+import { Button } from "~/components/ui/button";
 
 interface AddCustomerDialogProps {
   onAddCustomer: (customerName: string) => void;

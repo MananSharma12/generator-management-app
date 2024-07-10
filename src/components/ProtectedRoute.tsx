@@ -1,4 +1,4 @@
-import { createSignal, onMount, Show, Component, JSX } from "solid-js";
+import { onMount, Show, Component, JSX } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { supabase } from "~/supabaseClient";
 import {
@@ -7,51 +7,41 @@ import {
   ProgressValueLabel,
 } from "~/components/ui/progress";
 import { showToast } from "~/components/ui/toast.tsx";
+import { sessionStore, setSessionStore } from "~/store/store.ts";
 
 export const ProtectedRoute: Component<{
   children: JSX.Element | JSX.Element[];
 }> = (props) => {
   const navigate = useNavigate();
-  const [session, setSession] = createSignal<string | null>(null);
-  const [loading, setLoading] = createSignal(true);
-  const [progress, setProgress] = createSignal(0);
 
   onMount(async () => {
-    setProgress(20);
+    setSessionStore("progress", 20);
     const { data, error } = await supabase.auth.getSession();
-    setProgress(50);
+    setSessionStore("progress", 50);
 
-    try {
-      if (error || !data || !data.session) {
-        showToast({
-          title: "ERROR!",
-          description: `Something went wrong ${error}`,
-          variant: "error",
-        });
-        navigate("/login");
-      } else {
-        setSession(data.session.access_token);
-      }
-    } catch (error) {
+    if (error || !data || !data.session) {
       showToast({
         title: "ERROR!",
         description: `Something went wrong ${error}`,
         variant: "error",
       });
       navigate("/login");
-    } finally {
-      setLoading(false);
-      setProgress(100);
+    } else {
+      console.log(data);
+      setSessionStore("session", data.session);
     }
+
+    setSessionStore("loading", false);
+    setSessionStore("progress", 100);
   });
 
   return (
     <Show
-      when={!loading()}
+      when={!sessionStore.loading}
       fallback={
         <div class="flex flex-col items-center justify-center min-h-screen">
           <Progress
-            value={progress()}
+            value={sessionStore.progress}
             minValue={0}
             maxValue={100}
             class="w-[300px] space-y-1"
@@ -64,7 +54,7 @@ export const ProtectedRoute: Component<{
         </div>
       }
     >
-      {session() ? props.children : <div> Redirecting...</div>}
+      {sessionStore.session ? props.children : <div> Redirecting...</div>}
     </Show>
   );
 };
