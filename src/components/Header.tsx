@@ -14,6 +14,7 @@ import { supabase } from "~/supabaseClient.ts";
 import { useNavigate } from "@solidjs/router";
 import { showToast } from "~/components/ui/toast.tsx";
 import { resetSessionStore } from "~/store/store.ts";
+import { ModeToggle } from "~/components/ModeToggle.tsx";
 
 export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
   props,
@@ -44,6 +45,7 @@ export const Header: Component<{ children: JSX.Element | JSX.Element[] }> = (
             <span>Subscription expires in 30 days</span>
           </div>
         </div>
+        <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button

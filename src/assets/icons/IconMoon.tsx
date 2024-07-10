@@ -1,6 +1,6 @@
 import { Component, JSX } from "solid-js";
 
-export const BellIcon: Component<JSX.SvgSVGAttributes<SVGSVGElement>> = (
+export const IconMoon: Component<JSX.SvgSVGAttributes<SVGSVGElement>> = (
   props,
 ) => {
   return (
@@ -16,8 +16,7 @@ export const BellIcon: Component<JSX.SvgSVGAttributes<SVGSVGElement>> = (
       stroke-linecap="round"
       stroke-linejoin="round"
     >
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
     </svg>
   );
 };

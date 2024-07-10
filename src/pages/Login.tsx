@@ -34,7 +34,7 @@ export const Login = () => {
   };
 
   return (
-    <div class="flex flex-col items-center justify-center min-h-screen">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full">
       <h1 class="text-2xl mb-4">Login</h1>
       <input
         type="email"

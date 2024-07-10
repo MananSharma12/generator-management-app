@@ -90,7 +90,6 @@ export async function fetchPastDueGenerators() {
   const today = new Date().toISOString().split("T")[0];
 
   for (const customer of customers) {
-    console.log("For", customer);
     const { data: generators, error: generatorError } = await supabase
       .from("generators")
       .select(`*, customers(name)`)
@@ -98,9 +97,6 @@ export async function fetchPastDueGenerators() {
       .eq("customer_id", customer.id);
 
     if (generatorError) throw new Error("Error fetching generators");
-
-    console.log("We have generator", generators);
-    console.log("List so far", pastDueGenerators);
 
     pastDueGenerators.push(
       ...generators.map((g) => ({ ...g, customerName: customer.name })),
