@@ -1,7 +1,7 @@
 /* @refresh reload */
 import "./index.css";
 import { render } from "solid-js/web";
-import { Router, Route, RouteDefinition } from "@solidjs/router";
+import { Router, Route, RouteSectionProps } from "@solidjs/router";
 import { Component } from "solid-js";
 
 import App from "./App";
@@ -14,7 +14,7 @@ import { SignUp } from "~/pages/SignUp.tsx";
 import { NotFound } from "~/pages/NotFound.tsx";
 import { ProtectedRoute } from "~/components/ProtectedRoute.tsx";
 
-const ProtectedLayout: Component<{ children: RouteDefinition[] }> = (props) => (
+const ProtectedLayout: Component<RouteSectionProps> = (props) => (
   <ProtectedRoute>{props.children}</ProtectedRoute>
 );
 
