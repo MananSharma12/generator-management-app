@@ -30,18 +30,18 @@ export async function addGenerator(generator: {
   installDate: Date;
   warrantyDueDate: Date;
 }) {
-  // const { data: existingGenerators, error: fetchError } = await supabase
-  //   .from("generators")
-  //   .select("id")
-  //   .eq("serial_number", generator.serialNumber);
+  const { data: existingGenerators, error: fetchError } = await supabase
+    .from("generators")
+    .select("id")
+    .eq("serial_number", generator.serialNumber);
 
-  // if (fetchError) {
-  //   throw new Error("Error fetching generator. Please try again.");
-  // }
+  if (fetchError) {
+    throw new Error("Error fetching generator. Please try again.");
+  }
 
-  // if (existingGenerators.length > 0) {
-  //   throw new Error("Serial number already associated with another generator.");
-  // }
+  if (existingGenerators.length > 0) {
+    throw new Error("Serial number already associated with another generator.");
+  }
 
   const { data, error } = await supabase.from("generators").insert([
     {
