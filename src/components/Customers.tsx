@@ -27,18 +27,26 @@ export const Customers = (props: CustomersProps) => {
       <TableCaption>A list of your customers.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead class="w-[120px]">Customer ID</TableHead>
           <TableHead>Customer Name</TableHead>
+          <TableHead>Customer Email</TableHead>
+          <TableHead>Customer Phones</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody class="w-full">
         <For each={customers()}>
           {(customer) => (
             <TableRow>
-              <TableCell class="font-medium">{customer.id}</TableCell>
-              <A href={"/generators/" + customer.id} class="block w-full">
-                <TableCell>{customer.name}</TableCell>
-              </A>
+              <TableCell>
+                <A href={"/generators/" + customer.id} class="block w-full">
+                  {customer.name}
+                </A>
+              </TableCell>
+              <TableCell>{customer.email_id}</TableCell>
+              <TableCell>
+                <For each={customer.mobile_numbers}>
+                  {(phone) => <div>{phone}</div>}
+                </For>
+              </TableCell>
             </TableRow>
           )}
         </For>

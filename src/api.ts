@@ -1,13 +1,30 @@
-import { supabase } from "./supabaseClient";
+import { supabase } from "~/supabaseClient";
 import { sessionStore } from "~/store/store.ts";
+import { v4 } from "uuid";
 
-export async function addCustomer(name: string) {
+interface Generator {
+  serialNumber: string;
+  customerId: string;
+  installDate: Date;
+  warrantyDueDate: Date;
+}
+
+export async function addCustomer(customer: {
+  name: string;
+  email: string;
+  phones: string[];
+}) {
   const user = sessionStore.session?.user;
   if (!user) throw new Error("User not logged in");
 
-  const { data, error } = await supabase
-    .from("customers")
-    .insert([{ name, user_id: user.id }]);
+  const { data, error } = await supabase.from("customers").insert([
+    {
+      id: user.id,
+      name: customer.name,
+      email_id: customer.email,
+      mobile_numbers: customer.phones,
+    },
+  ]);
   if (error) throw error;
   return data;
 }
@@ -18,18 +35,13 @@ export async function getCustomers() {
 
   const { data, error } = await supabase
     .from("customers")
-    .select("id, name")
-    .eq("user_id", user.id);
+    .select("id, name, email_id, mobile_numbers")
+    .eq("id", user.id);
   if (error) throw error;
   return data;
 }
 
-export async function addGenerator(generator: {
-  serialNumber: string;
-  customerId: number;
-  installDate: Date;
-  warrantyDueDate: Date;
-}) {
+export async function addGenerator(generator: Generator) {
   const { data: existingGenerators, error: fetchError } = await supabase
     .from("generators")
     .select("id")
@@ -45,6 +57,7 @@ export async function addGenerator(generator: {
 
   const { data, error } = await supabase.from("generators").insert([
     {
+      id: v4(),
       serial_number: generator.serialNumber,
       customer_id: generator.customerId,
       install_date: generator.installDate,
@@ -59,7 +72,7 @@ export async function addGenerator(generator: {
   return data;
 }
 
-export async function fetchGenerators(customerId?: number) {
+export async function fetchGenerators(customerId?: string) {
   let query = supabase.from("generators").select("*");
 
   if (customerId) {
@@ -81,8 +94,7 @@ export async function fetchPastDueGenerators() {
 
   const { data: customers, error: customerError } = await supabase
     .from("customers")
-    .select("id, name")
-    .eq("user_id", user.id);
+    .select("id, name");
 
   if (customerError) throw new Error("Error fetching customers");
 

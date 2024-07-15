@@ -9,9 +9,13 @@ export const Dashboard = () => {
     () => {},
   );
 
-  const handleAddCustomer = async (customerName: string) => {
+  const handleAddCustomer = async (customer: {
+    name: string;
+    email: string;
+    phones: string[];
+  }) => {
     try {
-      await addCustomer(customerName);
+      await addCustomer(customer);
       showToast({
         title: "SUCCESS!",
         description: "Customer Successfully Added!",

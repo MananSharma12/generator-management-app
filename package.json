@@ -13,15 +13,16 @@
   "license": "MIT",
   "dependencies": {
     "@kobalte/core": "^0.13.3",
-    "@prisma/client": "^5.15.0",
     "@solidjs/router": "^0.13.5",
     "@supabase/supabase-js": "^2.43.5",
     "@tauri-apps/api": "^1",
+    "@types/uuid": "^10.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "solid-js": "^1.7.8",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
