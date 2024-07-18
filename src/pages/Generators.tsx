@@ -24,7 +24,7 @@ export const Generators = () => {
   const isPastDate = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to beginning of the day for accurate comparison
+    today.setHours(0, 0, 0, 0);
     return date < today;
   };
 
@@ -40,9 +40,10 @@ export const Generators = () => {
         </Show>
         <TableHeader>
           <TableRow>
-            <TableHead class="w-[100px]">Generator ID</TableHead>
-            <TableHead>Serial Number</TableHead>
-            <TableHead>Install Date</TableHead>
+            <TableHead>Equipment No.</TableHead>
+            <TableHead>Equipment Description</TableHead>
+            <TableHead>Address</TableHead>
+            <TableHead>Date of Commissioning</TableHead>
             <TableHead>Service Due Date</TableHead>
           </TableRow>
         </TableHeader>
@@ -50,19 +51,22 @@ export const Generators = () => {
           <For each={generators()}>
             {(generator) => (
               <TableRow>
-                <TableCell class="font-medium">{generator.id}</TableCell>
-                <TableCell>{generator.serial_number}</TableCell>
+                <TableCell class="font-medium">
+                  {generator.equipment_no}
+                </TableCell>
+                <TableCell>{generator.equipment_description}</TableCell>
                 <TableCell>
-                  {new Date(generator.install_date).toLocaleDateString()}
+                  {generator.address}, {generator.city}
+                </TableCell>
+                <TableCell>
+                  {generator.date_of_commissioning.toLocaleString("en-HI")}
                 </TableCell>
                 <TableCell
                   class={
-                    isPastDate(generator.warranty_due_date)
-                      ? "text-red-500"
-                      : ""
+                    isPastDate(generator.next_service_due) ? "text-red-500" : ""
                   }
                 >
-                  {new Date(generator.warranty_due_date).toLocaleDateString()}
+                  {generator.next_service_due.toLocaleString("en-HI")}
                 </TableCell>
               </TableRow>
             )}

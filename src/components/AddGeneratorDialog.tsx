@@ -13,9 +13,16 @@ export const AddGeneratorDialog = ({
   onAddGenerator,
 }: AddGeneratorDialogProps) => {
   let dialogRef: HTMLDialogElement | null = null;
-  const [serialNumber, setSerialNumber] = createSignal("");
-  const [installDate, setInstallDate] = createSignal("");
-  const [warrantyDate, setWarrantyDate] = createSignal("");
+  const [equipmentNo, setEquipmentNo] = createSignal("");
+  const [equipmentDescription, setEquipmentDescription] = createSignal("");
+  const [address, setAddress] = createSignal("");
+  const [city, setCity] = createSignal("");
+  const [geniusGenset, setGeniusGenset] = createSignal(false);
+  const [rmuNumber, setRmuNumber] = createSignal("");
+  const [dateOfCommissioning, setDateOfCommissioning] = createSignal("");
+  const [inWarranty, setInWarranty] = createSignal(false);
+  const [type, setType] = createSignal("");
+  const [status, setStatus] = createSignal(false);
 
   const openDialog = () => {
     dialogRef?.showModal();
@@ -26,11 +33,23 @@ export const AddGeneratorDialog = ({
   };
 
   const handleAddGenerator = async () => {
+    const commissioningDate = new Date(dateOfCommissioning());
+    const nextServiceDue = new Date(commissioningDate);
+    nextServiceDue.setMonth(commissioningDate.getMonth() + 6);
+
     const generator = {
-      serialNumber: serialNumber(),
-      installDate: new Date(installDate()),
-      warrantyDueDate: new Date(warrantyDate()),
       customerId,
+      equipmentNo: equipmentNo(),
+      equipmentDescription: equipmentDescription(),
+      address: address(),
+      city: city(),
+      geniusGenset: geniusGenset(),
+      rmuNumber: rmuNumber(),
+      dateOfCommissioning: commissioningDate,
+      inWarranty: inWarranty(),
+      type: type(),
+      status: status(),
+      nextServiceDue: nextServiceDue,
     };
 
     try {
@@ -44,7 +63,7 @@ export const AddGeneratorDialog = ({
       });
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "An unknown error occured.";
+        error instanceof Error ? error.message : "An unknown error occurred.";
       showToast({
         title: "ERROR!",
         description: errorMessage,
@@ -58,51 +77,152 @@ export const AddGeneratorDialog = ({
       <Button size="sm" onClick={openDialog}>
         Add Generator
       </Button>
-      <dialog ref={(el) => (dialogRef = el)} class="p-4 rounded shadow-lg">
+      <dialog
+        ref={(el) => (dialogRef = el)}
+        class="p-4 rounded shadow-lg text-left w-96"
+      >
         <h2 class="text-lg font-medium mb-2">Add Generator</h2>
         <div class="mb-2">
           <label
-            for="serialNumber"
+            for="equipmentNo"
             class="block text-sm font-medium text-gray-700"
           >
-            Serial Number
+            Equipment No
           </label>
           <input
-            id="serialNumber"
+            id="equipmentNo"
             type="text"
-            value={serialNumber()}
-            onInput={(e) => setSerialNumber(e.currentTarget.value)}
-            placeholder="Serial Number"
+            value={equipmentNo()}
+            onInput={(e) => setEquipmentNo(e.currentTarget.value)}
+            placeholder="Equipment No"
             class="border p-2 rounded w-full"
           />
         </div>
         <div class="mb-2">
           <label
-            for="installDate"
+            for="equipmentDescription"
             class="block text-sm font-medium text-gray-700"
           >
-            Install Date
+            Equipment Description
           </label>
           <input
-            id="installDate"
-            type="date"
-            value={installDate()}
-            onInput={(e) => setInstallDate(e.currentTarget.value)}
+            id="equipmentDescription"
+            type="text"
+            value={equipmentDescription()}
+            onInput={(e) => setEquipmentDescription(e.currentTarget.value)}
+            placeholder="Equipment Description"
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label for="address" class="block text-sm font-medium text-gray-700">
+            Address
+          </label>
+          <input
+            id="address"
+            type="text"
+            value={address()}
+            onInput={(e) => setAddress(e.currentTarget.value)}
+            placeholder="Address"
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label for="city" class="block text-sm font-medium text-gray-700">
+            City
+          </label>
+          <input
+            id="city"
+            type="text"
+            value={city()}
+            onInput={(e) => setCity(e.currentTarget.value)}
+            placeholder="City"
             class="border p-2 rounded w-full"
           />
         </div>
         <div class="mb-2">
           <label
-            for="warrantyDate"
+            for="geniusGenset"
             class="block text-sm font-medium text-gray-700"
           >
-            Warranty Date
+            Genius Genset
           </label>
           <input
-            id="warrantyDate"
+            id="geniusGenset"
+            type="checkbox"
+            checked={geniusGenset()}
+            onChange={(e) => setGeniusGenset(e.currentTarget.checked)}
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label
+            for="rmuNumber"
+            class="block text-sm font-medium text-gray-700"
+          >
+            RMU Number
+          </label>
+          <input
+            id="rmuNumber"
+            type="text"
+            value={rmuNumber()}
+            onInput={(e) => setRmuNumber(e.currentTarget.value)}
+            placeholder="RMU Number"
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label
+            for="dateOfCommissioning"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Date of Commissioning
+          </label>
+          <input
+            id="dateOfCommissioning"
             type="date"
-            value={warrantyDate()}
-            onInput={(e) => setWarrantyDate(e.currentTarget.value)}
+            value={dateOfCommissioning()}
+            onInput={(e) => setDateOfCommissioning(e.currentTarget.value)}
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label
+            for="inWarranty"
+            class="block text-sm font-medium text-gray-700"
+          >
+            In Warranty
+          </label>
+          <input
+            id="inWarranty"
+            type="checkbox"
+            checked={inWarranty()}
+            onChange={(e) => setInWarranty(e.currentTarget.checked)}
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label for="type" class="block text-sm font-medium text-gray-700">
+            Type
+          </label>
+          <input
+            id="type"
+            type="text"
+            value={type()}
+            onInput={(e) => setType(e.currentTarget.value)}
+            placeholder="Type"
+            class="border p-2 rounded w-full"
+          />
+        </div>
+        <div class="mb-2">
+          <label for="status" class="block text-sm font-medium text-gray-700">
+            Status
+          </label>
+          <input
+            id="status"
+            type="checkbox"
+            checked={status()}
+            onChange={(e) => setStatus(e.currentTarget.checked)}
             class="border p-2 rounded w-full"
           />
         </div>

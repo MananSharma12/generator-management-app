@@ -11,8 +11,8 @@ export const Dashboard = () => {
 
   const handleAddCustomer = async (customer: {
     name: string;
-    email: string;
-    phones: string[];
+    email_id: string;
+    mobile_numbers: string[];
   }) => {
     try {
       await addCustomer(customer);

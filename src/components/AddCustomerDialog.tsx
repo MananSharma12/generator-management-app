@@ -4,8 +4,8 @@ import { Button } from "~/components/ui/button";
 interface AddCustomerDialogProps {
   onAddCustomer: (customer: {
     name: string;
-    email: string;
-    phones: string[];
+    email_id: string;
+    mobile_numbers: string[];
   }) => void;
 }
 
@@ -13,7 +13,7 @@ export const AddCustomerDialog = ({
   onAddCustomer,
 }: AddCustomerDialogProps) => {
   let dialogRef: HTMLDialogElement | null = null;
-  const [name, setName] = createSignal("");
+  const [customerName, setCustomerName] = createSignal("");
   const [email, setEmail] = createSignal("");
   const [phones, setPhones] = createSignal<string[]>([""]);
 
@@ -26,30 +26,23 @@ export const AddCustomerDialog = ({
   };
 
   const handleAddCustomer = async () => {
-    if (
-      name().trim() === "" ||
-      email().trim() === "" ||
-      phones().some((phone) => phone.trim() === "")
-    ) {
-      alert("All fields must be filled out");
-      return;
-    }
-    try {
-      onAddCustomer({ name: name(), email: email(), phones: phones() });
-      setName("");
-      setEmail("");
-      setPhones([""]);
-      closeDialog();
-    } catch (error) {
-      console.error("Failed to add customer", error);
-      alert("Failed to add customer");
-    }
+    onAddCustomer({
+      name: customerName(),
+      email_id: email(),
+      mobile_numbers: phones(),
+    });
+    setCustomerName("");
+    setEmail("");
+    setPhones([""]);
+    closeDialog();
   };
 
-  const addPhoneField = () => setPhones([...phones(), ""]);
+  const addPhoneField = () => {
+    setPhones([...phones(), ""]);
+  };
 
   const updatePhoneField = (index: number, value: string) => {
-    const updatedPhones = phones().slice();
+    const updatedPhones = [...phones()];
     updatedPhones[index] = value;
     setPhones(updatedPhones);
   };
@@ -63,8 +56,8 @@ export const AddCustomerDialog = ({
         <h2 class="text-lg font-medium mb-2">Add Customer</h2>
         <input
           type="text"
-          value={name()}
-          onInput={(e) => setName(e.currentTarget.value)}
+          value={customerName()}
+          onInput={(e) => setCustomerName(e.currentTarget.value)}
           placeholder="Customer Name"
           class="border p-2 rounded mb-2 w-full"
         />
@@ -72,29 +65,24 @@ export const AddCustomerDialog = ({
           type="email"
           value={email()}
           onInput={(e) => setEmail(e.currentTarget.value)}
-          placeholder="Customer Email"
+          placeholder="Email"
           class="border p-2 rounded mb-2 w-full"
         />
-        <div>
-          <label>Phone Numbers</label>
-          <For each={phones()}>
-            {(phone, index) => (
-              <input
-                type="text"
-                value={phone}
-                onInput={(e) =>
-                  updatePhoneField(index(), e.currentTarget.value)
-                }
-                placeholder={`Phone ${index() + 1}`}
-                class="border p-2 rounded mb-2 w-full"
-              />
-            )}
-          </For>
-          <Button size="sm" onClick={addPhoneField} class="mb-2">
-            Add Another Phone
-          </Button>
-        </div>
-        <div class="flex justify-end space-x-2">
+        <For each={phones()}>
+          {(phone, index) => (
+            <input
+              type="text"
+              value={phone}
+              onInput={(e) => updatePhoneField(index(), e.currentTarget.value)}
+              placeholder={`Phone ${index() + 1}`}
+              class="border p-2 rounded mb-2 w-full"
+            />
+          )}
+        </For>
+        <Button size="sm" onClick={addPhoneField}>
+          Add Phone
+        </Button>
+        <div class="flex justify-end space-x-2 mt-4">
           <Button class="w-full" variant="secondary" onClick={closeDialog}>
             Cancel
           </Button>

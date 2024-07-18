@@ -3,26 +3,35 @@ import { sessionStore } from "~/store/store.ts";
 import { v4 } from "uuid";
 
 interface Generator {
-  serialNumber: string;
-  customerId: string;
-  installDate: Date;
-  warrantyDueDate: Date;
+  customerId: number;
+  equipmentNo: string;
+  equipmentDescription?: string;
+  address?: string;
+  city?: string;
+  geniusGenset?: boolean;
+  rmuNumber?: string;
+  dateOfCommissioning?: Date;
+  inWarranty?: boolean;
+  type?: "AMC" | "In Fold" | "Out of Fold";
+  status?: boolean;
+  lastServiceDone?: Date;
+  nextServiceDue?: Date;
 }
 
 export async function addCustomer(customer: {
   name: string;
-  email: string;
-  phones: string[];
+  email_id: string;
+  mobile_numbers: string[];
 }) {
   const user = sessionStore.session?.user;
   if (!user) throw new Error("User not logged in");
 
   const { data, error } = await supabase.from("customers").insert([
     {
-      id: user.id,
       name: customer.name,
-      email_id: customer.email,
-      mobile_numbers: customer.phones,
+      email_id: customer.email_id,
+      mobile_numbers: customer.mobile_numbers,
+      user_id: user.id,
     },
   ]);
   if (error) throw error;
@@ -35,8 +44,8 @@ export async function getCustomers() {
 
   const { data, error } = await supabase
     .from("customers")
-    .select("id, name, email_id, mobile_numbers")
-    .eq("id", user.id);
+    .select("id, name, email_id, mobile_numbers, user_id")
+    .eq("user_id", user.id);
   if (error) throw error;
   return data;
 }
@@ -45,7 +54,7 @@ export async function addGenerator(generator: Generator) {
   const { data: existingGenerators, error: fetchError } = await supabase
     .from("generators")
     .select("id")
-    .eq("serial_number", generator.serialNumber);
+    .eq("equipment_no", generator.equipmentNo);
 
   if (fetchError) {
     throw new Error("Error fetching generator. Please try again.");
@@ -58,10 +67,19 @@ export async function addGenerator(generator: Generator) {
   const { data, error } = await supabase.from("generators").insert([
     {
       id: v4(),
-      serial_number: generator.serialNumber,
       customer_id: generator.customerId,
-      install_date: generator.installDate,
-      warranty_due_date: generator.warrantyDueDate,
+      equipment_no: generator.equipmentNo,
+      equipment_description: generator.equipmentDescription,
+      address: generator.address,
+      city: generator.city,
+      genius_genset: generator.geniusGenset,
+      rmu_number: generator.rmuNumber,
+      date_of_commissioning: generator.dateOfCommissioning,
+      in_warranty: generator.inWarranty,
+      type: generator.type,
+      status: generator.status,
+      last_service_done: generator.lastServiceDone,
+      next_service_due: generator.nextServiceDue,
     },
   ]);
 
@@ -72,7 +90,7 @@ export async function addGenerator(generator: Generator) {
   return data;
 }
 
-export async function fetchGenerators(customerId?: string) {
+export async function fetchGenerators(customerId?: number) {
   let query = supabase.from("generators").select("*");
 
   if (customerId) {
