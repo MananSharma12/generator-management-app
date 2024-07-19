@@ -135,3 +135,23 @@ export async function fetchPastDueGenerators() {
 
   return pastDueGenerators;
 }
+
+export async function updateGeneratorService(
+  generatorId: string,
+  lastServiceDone: Date,
+  nextServiceDue: Date,
+) {
+  const { data, error } = await supabase
+    .from("generators")
+    .update({
+      last_service_done: lastServiceDone,
+      next_service_due: nextServiceDue,
+    })
+    .eq("id", generatorId);
+
+  if (error) {
+    throw new Error("Error updating generator service.");
+  }
+
+  return data;
+}
