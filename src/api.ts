@@ -8,11 +8,11 @@ interface Generator {
   equipmentDescription?: string;
   address?: string;
   city?: string;
-  geniusGenset?: boolean;
-  rmuNumber?: string;
+  geniusGenset: boolean;
+  rmuNumber: "" | number;
   dateOfCommissioning?: Date;
   inWarranty?: boolean;
-  type?: "AMC" | "In Fold" | "Out of Fold";
+  type: "AMC" | "In Fold" | "Out of Fold";
   status?: boolean;
   lastServiceDone?: Date;
   nextServiceDue?: Date;

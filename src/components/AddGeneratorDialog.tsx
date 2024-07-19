@@ -18,10 +18,12 @@ export const AddGeneratorDialog = ({
   const [address, setAddress] = createSignal("");
   const [city, setCity] = createSignal("");
   const [geniusGenset, setGeniusGenset] = createSignal(false);
-  const [rmuNumber, setRmuNumber] = createSignal("");
+  const [rmuNumber, setRmuNumber] = createSignal<"" | number>("");
   const [dateOfCommissioning, setDateOfCommissioning] = createSignal("");
   const [inWarranty, setInWarranty] = createSignal(false);
-  const [type, setType] = createSignal("");
+  const [type, setType] = createSignal<"AMC" | "In Fold" | "Out of Fold">(
+    "AMC",
+  );
   const [status, setStatus] = createSignal(false);
 
   const openDialog = () => {
@@ -166,7 +168,10 @@ export const AddGeneratorDialog = ({
             id="rmuNumber"
             type="text"
             value={rmuNumber()}
-            onInput={(e) => setRmuNumber(e.currentTarget.value)}
+            onInput={(e) => {
+              const value = e.currentTarget.value;
+              setRmuNumber(value === "" ? "" : Number(value));
+            }}
             placeholder="RMU Number"
             class="border p-2 rounded w-full"
           />
@@ -205,14 +210,20 @@ export const AddGeneratorDialog = ({
           <label for="type" class="block text-sm font-medium text-gray-700">
             Type
           </label>
-          <input
+          <select
             id="type"
-            type="text"
             value={type()}
-            onInput={(e) => setType(e.currentTarget.value)}
-            placeholder="Type"
+            onInput={(e) =>
+              setType(
+                e.currentTarget.value as "AMC" | "In Fold" | "Out of Fold",
+              )
+            }
             class="border p-2 rounded w-full"
-          />
+          >
+            <option value="AMC">AMC</option>
+            <option value="In Fold">In Fold</option>
+            <option value="Out of Fold">Out of Fold</option>
+          </select>
         </div>
         <div class="mb-2">
           <label for="status" class="block text-sm font-medium text-gray-700">
