@@ -14,9 +14,12 @@ import {
   ProgressLabel,
   ProgressValueLabel,
 } from "~/components/ui/progress";
+import { LogServiceDialog } from "~/components/LogServiceDialog.tsx";
 
 export const Warranty = () => {
-  const [pastDueGenerators] = createResource(fetchPastDueGenerators);
+  const [pastDueGenerators, { mutate }] = createResource(
+    fetchPastDueGenerators,
+  );
 
   return (
     <div class="flex flex-col space-y-4">
@@ -58,9 +61,10 @@ export const Warranty = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Customer Name</TableHead>
-                  <TableHead>Equipment Number</TableHead>
-                  <TableHead>Install Date</TableHead>
-                  <TableHead>Warranty Due Date</TableHead>
+                  <TableHead>Equipment No</TableHead>
+                  <TableHead>Date of Commissioning</TableHead>
+                  <TableHead>Next Service Due</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -78,6 +82,13 @@ export const Warranty = () => {
                         {generator.date_of_commissioning.toLocaleString(
                           "en_IN",
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <LogServiceDialog
+                          generatorId={generator.id}
+                          nextServiceDue={generator.next_service_due}
+                          onServiceLogged={() => mutate()}
+                        />
                       </TableCell>
                     </TableRow>
                   )}
