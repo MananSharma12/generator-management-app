@@ -58,7 +58,7 @@ export const Warranty = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Customer Name</TableHead>
-                  <TableHead>Serial Number</TableHead>
+                  <TableHead>Equipment Number</TableHead>
                   <TableHead>Install Date</TableHead>
                   <TableHead>Warranty Due Date</TableHead>
                 </TableRow>
@@ -68,14 +68,16 @@ export const Warranty = () => {
                   {(generator) => (
                     <TableRow>
                       <TableCell>{generator.customerName}</TableCell>
-                      <TableCell>{generator.serial_number}</TableCell>
+                      <TableCell>{generator.equipment_no}</TableCell>
                       <TableCell>
-                        {new Date(generator.install_date).toLocaleDateString()}
+                        {generator.date_of_commissioning.toLocaleString(
+                          "en-IN",
+                        )}
                       </TableCell>
                       <TableCell class="text-red-500 font-semibold">
-                        {new Date(
-                          generator.warranty_due_date,
-                        ).toLocaleDateString()}
+                        {generator.date_of_commissioning.toLocaleString(
+                          "en_IN",
+                        )}
                       </TableCell>
                     </TableRow>
                   )}

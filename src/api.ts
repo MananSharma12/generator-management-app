@@ -122,8 +122,8 @@ export async function fetchPastDueGenerators() {
   for (const customer of customers) {
     const { data: generators, error: generatorError } = await supabase
       .from("generators")
-      .select(`*, customers(name)`)
-      .lt("warranty_due_date", today)
+      .select(`*, customers!inner(name)`)
+      .lt("next_service_due", today)
       .eq("customer_id", customer.id);
 
     if (generatorError) throw new Error("Error fetching generators");

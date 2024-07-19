@@ -59,14 +59,14 @@ export const Generators = () => {
                   {generator.address}, {generator.city}
                 </TableCell>
                 <TableCell>
-                  {generator.date_of_commissioning.toLocaleString("en-HI")}
+                  {generator.date_of_commissioning.toLocaleString("en-IN")}
                 </TableCell>
                 <TableCell
                   class={
                     isPastDate(generator.next_service_due) ? "text-red-500" : ""
                   }
                 >
-                  {generator.next_service_due.toLocaleString("en-HI")}
+                  {generator.next_service_due.toLocaleString("en-IN")}
                 </TableCell>
               </TableRow>
             )}
