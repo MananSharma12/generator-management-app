@@ -13,6 +13,7 @@ import {
 } from "~/components/ui/table";
 
 import { AddGeneratorDialog } from "~/components/AddGeneratorDialog";
+import { LogServiceDialog } from "~/components/LogServiceDialog";
 
 export const Generators = () => {
   const params = useParams();
@@ -45,6 +46,7 @@ export const Generators = () => {
             <TableHead>Address</TableHead>
             <TableHead>Date of Commissioning</TableHead>
             <TableHead>Service Due Date</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,14 +61,23 @@ export const Generators = () => {
                   {generator.address}, {generator.city}
                 </TableCell>
                 <TableCell>
-                  {generator.date_of_commissioning.toLocaleString("en-IN")}
+                  {new Date(
+                    generator.date_of_commissioning,
+                  ).toLocaleDateString()}
                 </TableCell>
                 <TableCell
                   class={
                     isPastDate(generator.next_service_due) ? "text-red-500" : ""
                   }
                 >
-                  {generator.next_service_due.toLocaleString("en-IN")}
+                  {new Date(generator.next_service_due).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <LogServiceDialog
+                    generatorId={generator.id}
+                    nextServiceDue={new Date(generator.next_service_due)}
+                    onServiceLogged={refetch}
+                  />
                 </TableCell>
               </TableRow>
             )}
