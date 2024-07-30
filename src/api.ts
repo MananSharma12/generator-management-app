@@ -1,6 +1,7 @@
 import { supabase } from "~/supabaseClient";
 import { sessionStore } from "~/store/store.ts";
 import { v4 } from "uuid";
+import { sendServiceDueEmail } from "~/utils/email.ts";
 
 interface Generator {
   customerId: number;
@@ -91,19 +92,51 @@ export async function addGenerator(generator: Generator) {
 }
 
 export async function fetchGenerators(customerId?: number) {
-  let query = supabase.from("generators").select("*");
+  const user = sessionStore.session?.user;
+  if (!user) throw new Error("User not logged in");
 
+  let query = supabase.from("generators").select("*");
   if (customerId) {
     query = query.eq("customer_id", customerId);
   }
 
-  const { data, error } = await query;
+  const { data: generators, error } = await query;
 
   if (error) {
     throw new Error("Error fetching generators.");
   }
 
-  return data;
+  if (!generators) {
+    return [];
+  }
+
+  const today = new Date();
+  const userEmail = user.email;
+
+  if (!userEmail) {
+    throw new Error("User email not found in session.");
+  }
+
+  for (const generator of generators) {
+    console.log(generator);
+    if (generator.next_service_due) {
+      const nextServiceDue = new Date(generator.next_service_due);
+      if (nextServiceDue < today) {
+        const generatorInfo = `ID: ${generator.equipment_no}, Serial: ${generator.equipment_description}`;
+        try {
+          await sendServiceDueEmail(userEmail, generatorInfo);
+        } catch (emailError) {
+          console.error(
+            "Failed to send email for generator:",
+            generatorInfo,
+            emailError,
+          );
+        }
+      }
+    }
+  }
+
+  return generators;
 }
 
 export async function fetchPastDueGenerators() {

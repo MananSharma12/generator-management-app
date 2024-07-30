@@ -19,6 +19,7 @@
     "@types/uuid": "^10.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "mailgun.js": "^10.2.3",
     "solid-js": "^1.7.8",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
